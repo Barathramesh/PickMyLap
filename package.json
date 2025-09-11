@@ -1,0 +1,32 @@
+{
+  "name": "ai-laptop-recommendation-system",
+  "version": "1.0.0",
+  "description": "An AI-powered laptop recommendation system using TensorFlow.js",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "dev": "npx http-server . -p 8080 -o -c-1",
+    "build": "echo 'No build step required for this client-side application'",
+    "test": "echo 'No tests specified yet'"
+  },
+  "keywords": [
+    "tensorflow",
+    "machine-learning",
+    "ai",
+    "laptop",
+    "recommendation-system",
+    "javascript"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.15.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

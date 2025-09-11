@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Laptop Recommendation System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background: #e3f2fd;
+            color: #1976d2;
+            font-weight: 500;
+        }
+
+        .recommendations {
+            margin-top: 30px;
+        }
+
+        .recommendations h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .recommendation-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .recommendation-item {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .recommendation-item h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .laptop-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .laptop-details p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .laptop-details strong {
+            color: #333;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feature-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .laptop-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Laptop Recommendation System</h1>
+            <p>Enhanced with Improved Predictions - 986 Real Laptops Dataset</p>
+        </div>
+
+        <div class="content">
+            <!-- Training Section -->
+            <div class="form-section">
+                <h2>🧠 Enhanced Model Training</h2>
+                <p>Train the improved AI model with advanced data processing, better normalization, and enhanced neural network architecture. The system now includes data validation, confidence scoring, and multi-factor recommendation algorithms.</p>
+                <div class="button-section">
+                    <button id="trainModel" class="btn btn-primary">
+                        Train Enhanced AI Model
+                    </button>
+                </div>
+            </div>
+
+            <!-- User Preferences Form -->
+            <div class="form-section">
+                <h2>🔍 Your Laptop Preferences</h2>
+                <p>Tell us what you're looking for in a laptop, and our AI will find the best matches for you!</p>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="budget">Budget (₹)</label>
+                        <input type="number" id="budget" min="25000" max="300000" value="80000" step="5000">
+                        <div class="feature-description">How much are you willing to spend in Indian Rupees?</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ram">RAM (GB)</label>
+                        <select id="ram">
+                            <option value="4">4 GB</option>
+                            <option value="8" selected>8 GB</option>
+                            <option value="12">12 GB</option>
+                            <option value="16">16 GB</option>
+                            <option value="32">32 GB</option>
+                        </select>
+                        <div class="feature-description">More RAM = better multitasking</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="storage">Storage (GB)</label>
+                        <select id="storage">
+                            <option value="128">128 GB</option>
+                            <option value="256" selected>256 GB</option>
+                            <option value="512">512 GB</option>
+                            <option value="1024">1024 GB (1TB)</option>
+                            <option value="2048">2048 GB (2TB)</option>
+                        </select>
+                        <div class="feature-description">How much storage space do you need?</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="screenSize">Screen Size (inches)</label>
+                        <select id="screenSize">
+                            <option value="13.3">13.3"</option>
+                            <option value="14">14"</option>
+                            <option value="15.6" selected>15.6"</option>
+                            <option value="16">16"</option>
+                            <option value="17">17"</option>
+                            <option value="17.3">17.3"</option>
+                        </select>
+                        <div class="feature-description">Larger screen = better for work, smaller = more portable</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="batteryLife">Battery Life (hours)</label>
+                        <input type="number" id="batteryLife" min="4" max="15" value="8" step="1">
+                        <div class="feature-description">How long should the battery last?</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" min="1" max="4" value="2" step="0.1">
+                        <div class="feature-description">Lighter laptops are more portable</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="performance">Performance Score (1-10)</label>
+                        <input type="number" id="performance" min="1" max="10" value="7" step="1">
+                        <div class="feature-description">How important is high performance for gaming/work?</div>
+                    </div>
+                </div>
+
+                <div class="button-section">
+                    <button id="getRecommendations" class="btn btn-secondary" disabled>
+                        Get Smart AI Recommendations
+                    </button>
+                </div>
+            </div>
+
+            <!-- Status Display -->
+            <div id="status" class="status">
+                Ready to train the enhanced model with improved predictions!
+            </div>
+
+            <!-- Recommendations Display -->
+            <div class="recommendations">
+                <div id="recommendations"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="improved-script.js"></script>
+</body>
+</html>
