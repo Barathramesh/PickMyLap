@@ -6,7 +6,7 @@ const LatestUpd = () => {
   return (
     <div>
       <div>
-        <p className='text-center p-3 mb-5 font-bold text-lg'>New Launches</p>
+        <p className='text-center p-3 mt-5 mb-5 font-bold text-lg'>New Launches</p>
       </div>
       <div className="grid gap-10 
                       grid-cols-1 

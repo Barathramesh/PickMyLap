@@ -1,5 +1,6 @@
 import React from "react";
-import Card from "./Card";
+import { Link } from "react-router-dom";
+import LongCard from "./LongCard";
 
 export default function ListProduct({ laptops }) {
   if (!laptops.length) {
@@ -11,16 +12,30 @@ export default function ListProduct({ laptops }) {
   }
 
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-gray-100 p-4">
+    <div className="w-full gap-4 bg-gray-100 p-4">
       {laptops.map((laptop) => (
-        <Card
-          key={laptop.id}
-          name={laptop.name}
-          rating={laptop.rating.toFixed(1)}
-          price={laptop.price}
-          image={laptop.image}
-        />
+       <Link
+  to={`/product/${laptop.id}`}   // ✅ pass laptop id
+  key={laptop.id}
+  className="block hover:opacity-90 transition"
+>
+
+          <LongCard
+            name={laptop.name}
+            rating={laptop.rating.toFixed(1)}
+            price={laptop.price}
+            image={laptop.image}
+            processor={laptop.processor}
+            ram={laptop.ram}
+            storage={laptop.storage}
+            display={laptop.display}
+            os={laptop.os}
+            warrantyYears={laptop.warrantyYears}
+            mrp={laptop.mrp}
+          />
+        </Link>
       ))}
     </div>
   );
 }
+  

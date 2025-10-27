@@ -19,7 +19,7 @@ const Brandwise = () => {
             key={index}
             className="min-w-[160px] h-[160px] flex-shrink-0 flex items-center justify-center bg-white rounded-lg shadow 
                        hover:scale-108 hover:cursor-pointer shadow-md transform transition duration-300 
-                       border border-gray-300 hover:bg-gradient-to-tr from-gray-200 to-blue-00"
+                       border border-gray-300 hovercolor"
           >
             <img
               src={logo}

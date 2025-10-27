@@ -1,13 +1,31 @@
 @import "tailwindcss";
 
-/* global.css or index.css */
+/* Custom global styles */
+:root {
+  --brand-gradient: linear-gradient(to bottom right, #a5f3fc, #8b5cf6, #ec4899);
+}
+
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari, Opera */
+  display: none;
 }
+
 body {
   overflow-x: hidden;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .primary {
+    @apply bg-gradient-to-br from-cyan-200 via-violet-500 to-pink-500;
+  }
+
+  .hovercolor:hover {
+    @apply bg-gradient-to-br from-cyan-200 via-violet-200 to-pink-200;
+  }
 }

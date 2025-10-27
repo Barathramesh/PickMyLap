@@ -1,26 +1,27 @@
-import React from 'react'
+import React from 'react';
+import laptop from '../assets/laptop.png';
 
-const Card = ({name,rating,price,image}) => {
+const Card = ({ name, rating, price, image }) => {
   return (
-    <div className="p-2 w-full">
-      <div className="max-w-[250px] h-75 bg-white border border-gray-300 rounded-lg
+    <div className="p-2 w-100 active:scale-95">
+      <div className="max-w-[250px] h-[300px] bg-white border border-gray-300 rounded-lg
                       transform transition duration-300 
-                      hover:scale-105 hover:cursor-pointer shadow-md hover:bg-gradient-to-tr from-gray-200 to-blue-00">
+                      hover:scale-105 hover:cursor-pointer shadow-md"> 
+        <div className='h-45 flex justify-center items-center'> <img 
+          src={image || laptop}  // fallback to default image
+          alt={name} 
+          className="w-60 h-40 rounded-t-lg" 
+        />                                                  </div>
         
-        <img 
-          src={"laptop.png"} // adjust path if needed
-          alt="Laptop" 
-          className="w-full h-40 rounded-t-lg object-cover" 
-        />
 
         <div className="p-3 pb-1 font-semibold text-lg">{name}</div>
-        <div className="px-3 pb-1 text--600">★{rating}</div>
+        <div className="px-3 pb-1 text-gray-600">★{rating}</div>
         <div className="px-3 pb-3 text-gray-800">
           <span className="font-bold">₹{price.toLocaleString()}</span>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;
